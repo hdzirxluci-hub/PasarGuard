@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="PABLO Panel">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1b33"/>
+      <stop offset=".45" stop-color="#10325c"/>
+      <stop offset=".78" stop-color="#125a8a"/>
+      <stop offset="1" stop-color="#071426"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset=".5" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="txt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#bfdbfe"/>
+      <stop offset="1" stop-color="#a5f3fc"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#06b6d4" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="round"><rect x="0" y="0" width="1200" height="300" rx="0"/></clipPath>
+    <style>
+      .t1{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:800}
+      .t2{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:500}
+      .mono{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+    </style>
+  </defs>
+
+  <g clip-path="url(#round)">
+    <rect width="1200" height="300" fill="url(#g)"/>
+    <circle cx="1080" cy="40" r="300" fill="url(#glow1)"/>
+    <circle cx="120" cy="270" r="260" fill="url(#glow2)"/>
+
+    <!-- faint grid -->
+    <g opacity=".09" stroke="#ffffff" stroke-width="1">
+      <path d="M0 60h1200M0 120h1200M0 180h1200M0 240h1200"/>
+      <path d="M100 0v300M250 0v300M400 0v300M550 0v300M700 0v300M850 0v300M1000 0v300M1150 0v300"/>
+    </g>
+
+    <!-- big mark watermark, bottom-left, bleeding off the edge -->
+    <g transform="translate(30,96) scale(9)" opacity=".055" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 20.6V4.2h5.9a4.9 4.9 0 0 1 0 9.8H7"/>
+    </g>
+
+    <!-- badge -->
+    <g transform="translate(72,58)">
+      <rect width="84" height="84" rx="24" fill="url(#edge)"/>
+      <g transform="translate(20,20) scale(1.85)" stroke="#06121f" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 20.6V4.2h5.9a4.9 4.9 0 0 1 0 9.8H7"/>
+      </g>
+    </g>
+
+    <!-- wordmark -->
+    <text x="186" y="112" font-size="56" letter-spacing="6" fill="url(#txt)" class="t1">PABLO</text>
+    <text x="188" y="146" font-size="15.5" letter-spacing="4.6" fill="#a9c2d8" class="t2">SUBSCRIPTION PANEL</text>
+
+    <!-- rule -->
+    <rect x="188" y="164" width="150" height="3" rx="1.5" fill="url(#edge)"/>
+
+    <!-- chips -->
+    <g class="mono" font-size="13.5" font-weight="600">
+      <g transform="translate(188,190)">
+        <rect width="112" height="30" rx="15" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.16)"/>
+        <text x="56" y="20" text-anchor="middle" fill="#a5f3fc">PasarGuard 5</text>
+      </g>
+      <g transform="translate(310,190)">
+        <rect width="76" height="30" rx="15" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.16)"/>
+        <text x="38" y="20" text-anchor="middle" fill="#93c5fd">Xray core</text>
+      </g>
+      <g transform="translate(396,190)">
+        <rect width="118" height="30" rx="15" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.16)"/>
+        <text x="59" y="20" text-anchor="middle" fill="#bae6fd">Railway ready</text>
+      </g>
+      <g transform="translate(524,190)">
+        <rect width="96" height="30" rx="15" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.16)"/>
+        <text x="48" y="20" text-anchor="middle" fill="#7dd3fc">One service</text>
+      </g>
+    </g>
+
+    <!-- baseline -->
+    <text x="188" y="252" font-size="14" fill="#8fa6bd" class="t2">Persian subscription page &#183; live ping &#183; one-tap connect</text>
+  </g>
+
+  <!-- top hairline -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#edge)"/>
+</svg>
