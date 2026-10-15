@@ -45,9 +45,22 @@ DATA = Path(os.environ.get("DATA_DIR", "/var/lib/pasarguard"))
 # shift rather than a lookup table. Computed instead of pasted so the file stays
 # readable and the codepoints are not a mystery to whoever opens it next.
 def bold(text: str) -> str:
-    return "".join(
-        chr(0x1D5D4 + ord(c) - 65) if "A" <= c <= "Z" else c for c in text
-    )
+    """Plain text to its sans-serif bold form.
+
+    Capitals run from U+1D5D4 and small letters from U+1D5EE, so this is two
+    shifts rather than a lookup table. Anything that is not a letter is passed
+    through, which is what lets "Pablo" become 𝗣𝗮𝗯𝗹𝗼 and a name keep its
+    surrounding punctuation.
+    """
+    out = []
+    for c in text:
+        if "A" <= c <= "Z":
+            out.append(chr(0x1D5D4 + ord(c) - 65))
+        elif "a" <= c <= "z":
+            out.append(chr(0x1D5EE + ord(c) - 97))
+        else:
+            out.append(c)
+    return "".join(out)
 
 
 # BRAND stays the plain name so there is one obvious place to change it; the
@@ -74,7 +87,14 @@ GROUP_NAME = os.environ.get("GROUP_NAME", DISPLAY_BRAND)
 # The host remark is a template, and the panel expands {USERNAME} per user
 # (app/subscription/share.py: remark.format_map(format_variables)). That is what
 # puts the username in the name of every config the client imports.
-HOST_REMARK = os.environ.get("INBOUND_REMARK", DISPLAY_BRAND + " \u2022 {USERNAME}")
+# Every config a client imports is named after this. {USERNAME} is the name
+# typed in the panel for that client, so one person's configs read
+# 𝗣𝗔𝗕𝗟𝗢 | <their name> and the next person's read 𝗣𝗔𝗕𝗟𝗢 | <theirs>.
+HOST_REMARK = os.environ.get("INBOUND_REMARK", DISPLAY_BRAND + " | {USERNAME}")
+# What this project named hosts before the separator changed. A host still
+# carrying one of these is ours to rename; anything else was typed in the panel
+# by hand and is left untouched.
+SELF_LEGACY_HOST_REMARKS = (DISPLAY_BRAND + " \u2022 {USERNAME}",)
 
 # The address written into configs when nothing has told us the real one yet.
 # Deliberately not a host anything answers on, so a config carrying it is
@@ -501,7 +521,8 @@ def ensure_host(token) -> int | None:
         for h in hosts:
             ours = (
                 h.get("inbound_tag") in (INBOUND_TAG, LEGACY_INBOUND_TAG)
-                and h.get("remark") in (HOST_REMARK, LEGACY_HOST_REMARK)
+                and h.get("remark") in (HOST_REMARK, LEGACY_HOST_REMARK,
+                                    *SELF_LEGACY_HOST_REMARKS)
             )
             if not ours:
                 continue

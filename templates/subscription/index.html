@@ -607,11 +607,11 @@ img,svg{max-width:100%}
         <div class="cfg">
           <span class="sig">{{ sig }}</span>
           <span class="col2">
-            {# bootstrap names every host "BOLD • username", and the panel fills
+            {# bootstrap names every host "BOLD | username", and the panel fills
                the username in per user. So the real name is known here and is
                printed by the server; the script only takes over if it can read
                the actual remark back out of the link. #}
-            <span class="nm" data-name="{{ link }}">{{ BOLD }} • {{ user.username }}</span>
+            <span class="nm" data-name="{{ link }}">{{ BOLD }} | {{ user.username }}</span>
             <span class="tags" data-tags="{{ link }}"><span class="tg p">{{ proto }}</span></span>
           </span>
           <span class="acts">
@@ -935,7 +935,7 @@ img,svg{max-width:100%}
   })();
 
   /* ---------- config names and tags ---------- */
-  /* A link looks like  vless://uuid@host:443?...#%D9%86%D8%A7%D9%85...%20%E2%80%A2%20name
+  /* A link looks like  vless://uuid@host:443?...#%D9%86%D8%A7%D9%85...%20%7C%20name
      The part after # is the remark the panel built, percent-encoded. Decoding
      it gives exactly the name the client will show. Without a script the card
      shows the server-rendered name instead, so nothing is lost either way. */
