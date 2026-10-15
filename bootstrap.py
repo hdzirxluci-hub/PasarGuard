@@ -63,12 +63,19 @@ def bold(text: str) -> str:
     return "".join(out)
 
 
+# Everything about how this panel presents itself is decided here, not by the
+# environment. Railway Variables is not a settings panel for this service: the
+# only thing this file reads from there is the admin username and password
+# (see ADMIN_USER, a few lines down). Brand name, subscription page text and
+# link wording are fixed below, so a stray variable cannot rename the brand,
+# blank the subscription page or re-point the links.
+#
 # BRAND stays the plain name so there is one obvious place to change it; the
 # bold form is derived from it and is what the panel actually shows.
-BRAND = os.environ.get("BRAND", "PABLO")
-DISPLAY_BRAND = os.environ.get("DISPLAY_BRAND", "") or bold(BRAND)
-SUPPORT_URL = os.environ.get("SUB_SUPPORT_URL", "https://t.me/poll_o0")
-ANNOUNCE = os.environ.get("SUB_ANNOUNCE", "این پنل توسط Pablo ساخته شده")
+BRAND = "PABLO"
+DISPLAY_BRAND = bold(BRAND)
+SUPPORT_URL = "https://t.me/poll_o0"
+ANNOUNCE = "این پنل توسط Pablo ساخته شده"
 
 ADMIN_USER = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASS = os.environ.get("ADMIN_PASSWORD", "admin")
@@ -78,19 +85,19 @@ DB_FILE = DATA / "db.sqlite3"
 # The password must contain at least two uppercase letters -- enforced by the
 # panel, and the exact error is "Password must contain at least 2 uppercase letters".
 
-INBOUND_TAG = os.environ.get("INBOUND_TAG", f"{DISPLAY_BRAND}-VLESS-WS")
-INBOUND_PORT = int(os.environ.get("INBOUND_PORT", "10085"))
-TUNNEL_PATH = os.environ.get("TUNNEL_PATH", "/ws")
-CORE_NAME = os.environ.get("CORE_NAME", "pablo-core")
-NODE_NAME = os.environ.get("NODE_NAME", "pablo-node")
-GROUP_NAME = os.environ.get("GROUP_NAME", DISPLAY_BRAND)
+INBOUND_TAG = f"{DISPLAY_BRAND}-VLESS-WS"
+INBOUND_PORT = 10085
+TUNNEL_PATH = "/ws"
+CORE_NAME = "pablo-core"
+NODE_NAME = "pablo-node"
+GROUP_NAME = DISPLAY_BRAND
 # The host remark is a template, and the panel expands {USERNAME} per user
 # (app/subscription/share.py: remark.format_map(format_variables)). That is what
 # puts the username in the name of every config the client imports.
 # Every config a client imports is named after this. {USERNAME} is the name
 # typed in the panel for that client, so one person's configs read
 # 𝗣𝗔𝗕𝗟𝗢 | <their name> and the next person's read 𝗣𝗔𝗕𝗟𝗢 | <theirs>.
-HOST_REMARK = os.environ.get("INBOUND_REMARK", DISPLAY_BRAND + " | {USERNAME}")
+HOST_REMARK = DISPLAY_BRAND + " | {USERNAME}"
 # What this project named hosts before the separator changed. A host still
 # carrying one of these is ours to rename; anything else was typed in the panel
 # by hand and is left untouched.
@@ -103,20 +110,20 @@ SELF_LEGACY_HOST_REMARKS = (DISPLAY_BRAND + " \u2022 {USERNAME}",)
 PLACEHOLDERS = ("CHANGE-ME.up.railway.app",)
 PLACEHOLDER = PLACEHOLDERS[0]
 
-# Set this only when the panel you are redeploying over was set up under a
-# different name: the steps below then rewrite those objects in place instead of
-# adding a duplicate group, a second core fighting for the same port, or a host
-# pointing at an inbound tag that no longer exists anywhere. Empty on a fresh
-# install, which is the normal case.
-PREVIOUS_BRAND = os.environ.get("PREVIOUS_BRAND", "").strip()
-LEGACY_INBOUND_TAG = f"{PREVIOUS_BRAND}-VLESS-WS" if PREVIOUS_BRAND else None
-LEGACY_GROUP_NAME = PREVIOUS_BRAND or None
-LEGACY_HOST_REMARK = PREVIOUS_BRAND or None
+# Objects this project wrote under an earlier name. The steps below rewrite those
+# in place instead of adding a duplicate group, a second core fighting for the
+# same port, or a host pointing at an inbound tag that no longer exists anywhere.
+# Nothing to configure: a name is only ever adopted when it is one of the ones
+# listed here, so a host someone renamed in the panel by hand is left alone.
+PREVIOUS_BRAND = ""
+LEGACY_INBOUND_TAG = None
+LEGACY_GROUP_NAME = None
+LEGACY_HOST_REMARK = None
 NODE_CERT = DATA / "node" / "ssl_cert.pem"
 NODE_KEY = DATA / "node" / "ssl_key.pem"
 NODE_API_KEY_FILE = DATA / "node" / "api_key"
-NODE_PORT = int(os.environ.get("NODE_PORT", "62050"))
-NODE_API_PORT = int(os.environ.get("NODE_API_PORT", "62051"))
+NODE_PORT = 62050
+NODE_API_PORT = 62051
 
 
 def log(msg: str) -> None:
@@ -191,7 +198,7 @@ def wait_for_panel(seconds=180):
 # step 1 - the owner account
 # ---------------------------------------------------------------------------
 def panel_prefix() -> str:
-    return os.environ.get("DASHBOARD_PATH", "/dashboard/")
+    return "/dashboard/"
 
 
 def create_owner():
@@ -491,7 +498,7 @@ def host_body(host: str) -> dict:
     return {
         "remark": HOST_REMARK,
         "address": [host],
-        "port": int(os.environ.get("PUBLIC_PORT", "443")),
+        "port": 443,
         "inbound_tag": INBOUND_TAG,
         "path": TUNNEL_PATH,
         "security": "tls",
@@ -659,11 +666,8 @@ def ensure_apps(token):
 
     Never overwrites a list that is already there: someone may have curated
     their own apps in the panel, and silently replacing that on every boot
-    would be worse than shipping the default. Set SUB_APPS=0 to skip entirely.
+    would be worse than shipping the default.
     """
-    if os.environ.get("SUB_APPS", "1") != "1":
-        log("app tiles skipped (SUB_APPS is off)")
-        return
 
     code, settings = call("/api/settings", token=token)
     if code != 200 or not isinstance(settings, dict):

@@ -3,18 +3,20 @@
 set -uo pipefail
 
 DATA_DIR="${DATA_DIR:-/var/lib/pasarguard}"
-# HTTP_PORT wins if it is set; otherwise follow Railway's PORT; otherwise 8080.
-# Railway routes its edge to the port it injects, so ignoring PORT here would
-# leave nginx listening on a port the world is not pointed at.
-HTTP_PORT="${HTTP_PORT:-${PORT:-8080}}"
-PANEL_PORT="${PANEL_PORT:-8000}"
-NODE_PORT="${NODE_PORT:-62050}"
-NODE_API_PORT="${NODE_API_PORT:-62051}"
-INBOUND_PORT="${INBOUND_PORT:-10085}"
-TUNNEL_PATH="${TUNNEL_PATH:-/ws}"
-BRAND="${BRAND:-PABLO}"
+# Fixed values, not settings. Railway Variables is not a control panel for this
+# service: the only thing read from there is the admin username and password,
+# and bootstrap.py is where those are picked up. Brand, ports and paths are
+# decided here so a stray variable cannot rename the brand or re-point the panel.
+# Railway routes its edge to the port it injects, so nginx follows PORT.
+HTTP_PORT="${PORT:-8080}"
+PANEL_PORT=8000
+NODE_PORT=62050
+NODE_API_PORT=62051
+INBOUND_PORT=10085
+TUNNEL_PATH=/ws
+BRAND=PABLO
 
-export TZ="${TZ:-Asia/Tehran}"
+export TZ=Asia/Tehran
 mkdir -p "$DATA_DIR" "$DATA_DIR/templates/subscription" "$DATA_DIR/node" /run/nginx
 
 log() { printf '[entrypoint] %s\n' "$*"; }
